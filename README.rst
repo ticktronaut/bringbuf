@@ -47,7 +47,15 @@ Usage
     print(buf.dequeue(3))
     # read content of the whole buffer without removing any bytes
     print(buf.read(buf.len))
-  
+    # enque four new bytes
+    buf.enqueue([0x07, 0x08, 0x09])
+    # read content of the whole buffer without removing any bytes
+    print(buf.read(buf.len))
+    # contains pattern?
+    print(buf.contains([0x02, 0x08]), buf.contains([0x07, 0x08, 0x09]))
+    # index of patterns
+    print(buf.index([0x02, 0x08]), buf.index([0x07, 0x08, 0x09]))
+
 
 License
 -------

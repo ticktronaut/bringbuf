@@ -64,7 +64,7 @@ class bRingBuf(object):
         n
             Number of byes to read and remove from the buffer (default is one).
         return
-            Bytes read from buffer.
+            Bytes read and removed from buffer.
         """
         if n > self.len: 
             message = str(n) + ' bytes requested, but only ' + str(self.len) + ' bytes available.'
@@ -89,15 +89,16 @@ class bRingBuf(object):
         return
             Bytes read from buffer.
         """
-        if n > self.len:
+        if (n > self.len):
             message = str(n) + ' bytes requested, but only ' + str(self.len) + ' bytes available.'
             n = self.len 
             warnings.warn(message)
-        return list(itertools.islice(self._q,offset,n))
+        return list( itertools.islice( self._q,offset,( n+offset ) ) )
 
     def clear(self):
         """Clear all bytes from buffer.
         """
+        self.len = 0
         self._q.clear()
 
     def is_empty(self):
@@ -106,6 +107,35 @@ class bRingBuf(object):
         Parameters
         ----------
         return
-            Return is true if buffer is empty, else false.
+            Return is True if buffer is empty, else False.
         """
-        return not bool(self.len) 
+        return not bool(self.len)
+
+    def contains(self, pattern):
+        """Returns true if b is available in queue.
+        
+        Parameters
+        ----------
+        pattern 
+            Pattern to search for (iterable byte sequence).
+        return
+            Return True if buffer contains pattern, else False.
+        """
+        if self._q.count(pattern[0]):
+            index = self.read(self.len).index(pattern[0])
+            return ( self.read(len(pattern), index) == pattern )
+
+    def index(self, pattern):
+        """If the buffer includes the pattern, this function returns its index. Otherwise it return -1
+
+        Parameters
+        ----------
+        pattern
+            Pattern to search for (iterable byte sequence).
+        return
+            Index of occurence of pattern. If buffer does not contain pattern return value is -1.
+        """
+        if self.contains(pattern):
+            return self.read(self.len).index(pattern[0])
+        else:
+            return -1
