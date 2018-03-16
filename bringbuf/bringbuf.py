@@ -39,8 +39,8 @@ class bRingBuf(object):
     """
     def __init__(self, max_size=100):
         self._max_size = max_size
-        self._b = bytearray(max_size) # bytes vs. bytearray http://ze.phyr.us/bytearray/
-        self._q = deque(self._b, maxlen=max_size)
+        #self._b = bytearray(max_size) # bytes vs. bytearray http://ze.phyr.us/bytearray/
+        self._q = deque(maxlen=max_size)
         self.len = 0
 
     def enqueue(self, b):
@@ -89,9 +89,9 @@ class bRingBuf(object):
         return
             Bytes read from buffer.
         """
-        if (n > self.len):
-            message = str(n) + ' bytes requested, but only ' + str(self.len) + ' bytes available.'
-            n = self.len 
+        if ((n+offset) > self.len):
+            message = str(n) + ' bytes requested, but only ' + str( (self.len-offset) ) + ' bytes available.'
+            n = self.len - offset
             warnings.warn(message)
         return list( itertools.islice( self._q,offset,( n+offset ) ) )
 
@@ -111,7 +111,7 @@ class bRingBuf(object):
         """
         return not bool(self.len)
 
-    def contains(self, pattern):
+    def contains(self, pattern, offset=0):
         """Returns true if b is available in queue.
         
         Parameters
@@ -121,11 +121,13 @@ class bRingBuf(object):
         return
             Return True if buffer contains pattern, else False.
         """
-        if self._q.count(pattern[0]):
-            index = self.read(self.len).index(pattern[0])
+        if pattern[0] in self.read((self.len-offset), offset):
+            index = ( self.read(self.len, offset).index(pattern[0]) ) + offset
             return ( self.read(len(pattern), index) == pattern )
+        else:
+            return False 
 
-    def index(self, pattern):
+    def index(self, pattern, offset=0):
         """If the buffer includes the pattern, this function returns its index. Otherwise it return -1
 
         Parameters
@@ -135,7 +137,7 @@ class bRingBuf(object):
         return
             Index of occurence of pattern. If buffer does not contain pattern return value is -1.
         """
-        if self.contains(pattern):
-            return self.read(self.len).index(pattern[0])
+        if self.contains(pattern, offset):
+            return self.read( (self.len-offset), offset ).index(pattern[0]) + offset
         else:
             return -1

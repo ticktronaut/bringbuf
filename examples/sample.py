@@ -28,3 +28,10 @@ print(buf.read(buf.len))
 print(buf.contains([0x02, 0x08]), buf.contains([0x07, 0x08, 0x09]))
 # index of patterns
 print(buf.index([0x02, 0x08]), buf.index([0x07, 0x08, 0x09]))
+
+# contains pattern (with offset)?
+print(buf.contains([0x02, 0x08], 2), buf.contains([0x07, 0x08, 0x09], offset=2))
+# index of patterns (with offset)
+print(buf.index([0x02, 0x08], 2), buf.index([0x07, 0x08, 0x09], 2))
+# read with offset
+print(buf.read(3, 3))
