@@ -72,7 +72,7 @@ class bRingBuf(object):
             warnings.warn(message)
         b = bytearray(n)
         for i in range(n):
-            b[i] = self._q.pop()
+            b[i] = self._q.popleft()
 
         self.len = len(self._q)
         return b
@@ -85,7 +85,7 @@ class bRingBuf(object):
         n
             Number of bytes to read from the buffer.
         offset
-            Indes offset to start reading bytes.
+            Index offset to start reading bytes.
         return
             Bytes read from buffer.
         """
@@ -93,7 +93,9 @@ class bRingBuf(object):
             message = str(n) + ' bytes requested, but only ' + str( (self.len-offset) ) + ' bytes available.'
             n = self.len - offset
             warnings.warn(message)
-        return list( itertools.islice( self._q,offset,( n+offset ) ) )
+        # todo: return bytes type by using bytes (...), which is an immutable type
+        #return list( itertools.islice( self._q,offset,( n+offset ) ) )
+        return bytes( itertools.islice( self._q,offset,( n+offset ) ) )
 
     def clear(self):
         """Clear all bytes from buffer.
@@ -118,12 +120,14 @@ class bRingBuf(object):
         ----------
         pattern 
             Pattern to search for (iterable byte sequence).
+        offset
+            Index offset to start.
         return
             Return True if buffer contains pattern, else False.
         """
         if pattern[0] in self.read((self.len-offset), offset):
             index = ( self.read(self.len, offset).index(pattern[0]) ) + offset
-            return ( self.read(len(pattern), index) == pattern )
+            return ( list(self.read(len(pattern), index)) == pattern )
         else:
             return False 
 
@@ -134,6 +138,8 @@ class bRingBuf(object):
         ----------
         pattern
             Pattern to search for (iterable byte sequence).
+        offset
+            Index offset to start.
         return
             Index of occurence of pattern. If buffer does not contain pattern return value is -1.
         """
