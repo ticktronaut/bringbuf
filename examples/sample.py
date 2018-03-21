@@ -55,4 +55,11 @@ print(buf.index([0x02, 0x08], 2), buf.index([0x07, 0x08, 0x09], 2))
 
 # read with offset
 print(buf.read(3, 3))
-buf.enqueue([15, 16, 17, 18, 19, 20])
+
+# enqueue a single byte
+buf.enqueue_byte(0xff)
+
+print(buf.read(buf.len))
+
+# dequeue a single byte
+print(buf.dequeue_byte())

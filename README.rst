@@ -30,6 +30,11 @@ Usage
 
 .. code-block:: python
 
+    #!/usr/bin/env python
+    #coding=utf-8
+    
+    # The following example shows the basic usage of bRingBuf class
+    
     from bringbuf import bRingBuf
     
     # define a ring buffer with the size of 5 bytes
@@ -82,8 +87,14 @@ Usage
     
     # read with offset
     print(buf.read(3, 3))
-    buf.enqueue([15, 16, 17, 18, 19, 20])
-
+    
+    # enqueue a single byte
+    buf.enqueue_byte(0xff)
+    
+    print(buf.read(buf.len))
+    
+    # dequeue a single byte
+    print(buf.dequeue_byte())
 
 License
 -------

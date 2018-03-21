@@ -56,6 +56,18 @@ class bRingBuf(object):
         self.len = len(self._q)
          
 
+    def enqueue_byte(self, b):
+        """Write a single byte to the buffer.
+
+        Parameters
+        ----------
+        b
+            byte to enqueue to the buffer
+
+        """
+        self._q.append(b)
+        self.len = len(self._q)
+
     def dequeue(self, n=1):
         """Read and remove number of bytes from the buffer.
 
@@ -73,6 +85,19 @@ class bRingBuf(object):
         b = bytearray(n)
         for i in range(n):
             b[i] = self._q.popleft()
+
+        self.len = len(self._q)
+        return b
+
+    def dequeue_byte(self):
+        """Read and remove a single byte from the buffer.
+
+        Parameters
+        ----------
+        return
+            single byte read and removed from buffer.
+        """
+        b = self._q.popleft()
 
         self.len = len(self._q)
         return b
