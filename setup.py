@@ -20,9 +20,8 @@ setup(
     url='http://github.com/ticktronaut/bringbuf',
     license='MIT',
     python_requires='>=3',
-    py_modules=['bringbuf.bringbuf'],
-    packages=find_packages(exclude=['virtenv'])
-    #py_modules=['bringbuf']
+    py_modules=['bringbuf', 'bringbuf.bringbuf'],
+    packages=find_packages(exclude=['virtenv']),
     #install_requires=['collections', 'itertools', 'warnings'],
-    #include_package_data=True
+    include_package_data=True
 )
