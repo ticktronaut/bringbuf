@@ -2,7 +2,7 @@
 bringbuf
 ========
 
-*bringbuf* is very basic circular buffer implementation. Its purpose is to handle byte streams (for instance from a serial port). It is based on enque, which is a efficient way to handle queues in Python. First bytes written to the buffer, are first bytes read from the buffer. If the buffer is full it overflows and begins overwriting the oldest data.
+*bringbuf* is very basic circular buffer implementation. Its purpose is to handle byte streams (for instance from a serial port). It is based on enque, which is a efficient way to handle queues in Python. First bytes written to the buffer, are first bytes read from the buffer. If the buffer is full it overflows and overwrites the oldest data.
 
 The code is available at `github`_.
 
